@@ -2,10 +2,27 @@
 {
     public class Program
     {
-        ILogger Logger { get; }
         static void Main(string[] args)
         {
-            bool check=true;
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
+            Calculator calculator = new Calculator();
+            Console.WriteLine("Результат сложения: "+((ICalculator)calculator).Addition());
+            Console.ReadKey();
+        }
+    }
+    public interface ICalculator
+    {
+        long Addition();
+    }
+    public class Calculator : ICalculator
+    {
+        ILogger Logger { get; set; }
+        long ICalculator.Addition()
+        {
+            Logger = new Logger();
+            bool check = true;
+            long a = 0, b = 0;
             do
             {
                 try
@@ -15,12 +32,10 @@
                     string tempA = Console.ReadLine();
                     Console.Write("Введите второе число: ");
                     string tempB = Console.ReadLine();
-                    bool parsecheck1 = long.TryParse(tempA, out long a);
-                    bool parsecheck2 = long.TryParse(tempB, out long b);
+                    bool parsecheck1 = long.TryParse(tempA, out a);
+                    bool parsecheck2 = long.TryParse(tempB, out b);
                     if ((parsecheck1 == false) | (parsecheck2 == false)) throw new FormatException("Вы ввели неверное значение!");
                     check = false;
-                    Calculator calculator = new Calculator();
-                    Console.WriteLine( ((ICalculator) calculator).Addition(a,b));
                 }
                 catch (Exception ex)
                 {
@@ -29,21 +44,10 @@
                 }
             }
             while (check);
-        }
-    }
-    public interface ICalculator
-    {
-        long Addition(long a, long b);
-    }
-    public class Calculator : ICalculator
-    {
-        ILogger Logger { get; }
-        long ICalculator.Addition(long a, long b)
-        {
             Logger.Event("Начался процесс сложения");
             long rez = a + b;
-            return rez;
             Logger.Event("Закончился процесс сложения");
+            return rez;
         }
     }
     public interface ILogger
@@ -55,12 +59,16 @@
     {
         public void Error(string mess)
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(mess);
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
         public void Event(string mess)
         {
+            Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine(mess);
+            Console.ForegroundColor = ConsoleColor.White;
         }
     }
 }
