@@ -39,8 +39,7 @@
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error("Программа выдала ошибку");
-                    Console.WriteLine(ex.Message);
+                    Logger.Error("Программа выдала ошибку: "+ ex.Message);
                 }
             }
             while (check);
